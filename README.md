@@ -7,6 +7,6 @@ hi
 
 相关依赖如下
 
-spring  springmvc  mybatis 
- mysql lombok logback日志
- common-lang3工具  jackson（json解析工具）
+spring 、 springmvc、  mybatis 、
+ mysql、 lombok、 logback日志、
+ common-lang3工具  、jackson（json解析工具）
