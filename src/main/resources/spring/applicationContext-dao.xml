@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--引入配置文件-->
+    <bean id="propertyConfig" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+        <property name="locations">
+            <list>
+                <value>classpath:setting.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <!--连接池-->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init">
+        <property name="driverClassName" value="${db.driverClassName}"/>
+        <property name="url" value="${db.url}" />
+        <property name="username" value="${db.username}"/>
+        <property name="password" value="${db.password}"/>
+        <!--初始化大小-->
+        <property name="initialSize" value="3"/>
+        <!--最小闲置-->
+        <property name="minIdle" value="3"/>
+        <!--最多的池子数量-->
+        <property name="maxActive" value="20"/>
+        <!--最长等待时间-->
+        <property name="maxWait" value="60000"/>
+        <!--druid过滤器-->
+        <property name="filters" value="stat,wall"/>
+    </bean>
+
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="configLocation" value="classpath:mybatis/mybatis-config.xml"/>
+        <property name="dataSource" ref="dataSource"/>
+        <property name="mapperLocations" value="classpath:mapper/**.xml"/>
+    </bean>
+
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.me.dao"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+    </bean>
+
+    <!--druid特制配置-->
+    <bean id="stat-filter" class="com.alibaba.druid.filter.stat.StatFilter">
+        <!--超过多少毫秒被定义为慢sql-->
+        <property name="slowSqlMillis" value="3000"/>
+        <!--慢sql使用日志记录-->
+        <property name="logSlowSql" value="true"/>
+        <!--记录sql时展示为一行-->
+        <property name="mergeSql" value="true"/>
+    </bean>
+
+    <bean id="wall-filter" class="com.alibaba.druid.wall.WallFilter">
+        <property name="dbType" value="mysql"/>
+    </bean>
+
+
+
+
+
+
+
+</beans>
